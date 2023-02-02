@@ -3,13 +3,11 @@ currentBuild.displayName = "online-shopping-#"+currentBuild.number
 pipeline{
     agent any
     
-    environment{
-        PATH = "/opt/maven3/bin:$PATH"
-    }
+     
     stages{
         stage("Git Checkout"){
             steps{
-                git credentialsId: 'github', url: 'https://github.com/javahometech/myweb'
+                git credentialsId: 'shankar', url: 'git@github.com:Shankargoud1/myweb.git'
             }
         }
         stage("Maven Build"){
@@ -22,11 +20,11 @@ pipeline{
             steps{
                 sshagent(['tomcat-new']) {
                 sh """
-                    scp -o StrictHostKeyChecking=no target/myweb.war  ec2-user@172.31.5.176:/opt/tomcat8/webapps/
+                    scp -o StrictHostKeyChecking=no target/myweb.war  ec2-user@172.31.10.135:/home/ec2-user/tomcat/apache-tomcat-9.0.71/webapps/
                     
-                    ssh ec2-user@172.31.5.176 /opt/tomcat8/bin/shutdown.sh
+                    ssh ec2-user@172.31.10.135 /home/ec2-user/tomcat/apache-tomcat-9.0.71/bin/shutdown.sh
                     
-                    ssh ec2-user@172.31.5.176 /opt/tomcat8/bin/startup.sh
+                    ssh ec2-user@172.31.10.135 /home/ec2-user/tomcat/apache-tomcat-9.0.71/bin/startup.sh
                 
                 """
             }
